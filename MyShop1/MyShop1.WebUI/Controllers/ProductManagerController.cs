@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.Remoting.Contexts;
 using System.Web;
@@ -38,14 +39,19 @@ namespace MyShop1.WebUI.Controllers
 
         }
         [HttpPost]
-        public ActionResult Create(Product product)
+        public ActionResult Create(Product product,HttpPostedFileBase file)
         {
             if (!ModelState.IsValid)
             {
-                return View(product)
+                return View(product);
             }
             else
             {
+                if(file !=null)
+                {
+                    product.Image = product.Id + Path.GetExtension(file.FileName);
+                    file.SaveAs(Server.MapPath("//Content//ProductImages//") + product.Image);
+                }
                 Context.Insert(product);
                 Context.Commit();
                 return RedirectToAction("Index");
@@ -84,6 +90,12 @@ namespace MyShop1.WebUI.Controllers
                 if (!ModelState.IsValid)
                 {
                     return View(product);
+                }
+
+                if (file != null)
+                {
+                    productToEdit.Image = product.Id + Path.GetExtension(file.FileName);
+                    file.SaveAs(Server.MapPath("//Content//ProductImages//") + productToEdit.Image);
                 }
 
                 productToEdit.Category = product.Category;
