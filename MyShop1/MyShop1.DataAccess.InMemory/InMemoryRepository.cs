@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyShop1.Core.Contracts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MyShop1.DataAccess.InMemory
 {
-    public class InMemoryRepository<T> : IRepository<T> where T : BaseEntity
+    public class InMemoryRepository<T> : IRepository<T>, where T : BaseEntity
     {
         ObjectCache cache = MemoryCache.Default;
         List<T> items;
