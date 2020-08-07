@@ -5,6 +5,7 @@ using System.Runtime.Remoting.Contexts;
 using System.Web;
 using System.Web.Mvc;
 using MyShop.Core.Models;
+using MyShop.Core.ViesModels;
 using MyShop1.DataAccess.InMemory;
 
 namespace MyShop1.WebUI.Controllers
@@ -12,10 +13,12 @@ namespace MyShop1.WebUI.Controllers
     public class ProductManagerController : Controller
     {
         ProductRepository Context;
+        ProductcategoryRepository productcategories;
 
     public ProductManagerController()
         {
             Context = new ProductRepository();
+            productcategories = new ProductcategoryRepository();
 
         }
         // GET: ProductManager
@@ -26,8 +29,12 @@ namespace MyShop1.WebUI.Controllers
         }
         public ActionResult Create()
         {
-            Product product = new Product();
-            return View(product);
+            ProductManagerViewModel viewModel = new ProductManagerViewModel();
+            viewModel.Product = new Product();
+            viewModel.Productcategories = productcategories.Collection();
+            return View(viewModel);
+
+
         }
         [HttpPost]
         public ActionResult Create(Product product)
@@ -54,7 +61,11 @@ namespace MyShop1.WebUI.Controllers
             }
             else
             {
-                return View(product);
+                ProductManagerViewModel viewModel = new ProductManagerViewModel();
+                viewModel.Product = product;
+                viewModel.Productcategories = productcategories.Collection();
+
+                return View(viewModel);
             }
         }
 
