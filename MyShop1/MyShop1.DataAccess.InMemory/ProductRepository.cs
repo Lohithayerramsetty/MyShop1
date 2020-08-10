@@ -78,6 +78,24 @@ namespace MyShop1.DataAccess.InMemory
         }
 
     }
+    public ActionResult ProductList(string test)
+    {
+        List<string> selectedProductTypes;
+
+        selectedProductTypes = Request.Form["checkBoxForType"] == null ? new List<string>() : Request.Form["checkBoxForType"].Split(',').ToList();
+
+        List<Product> selectedProducts = new List<Product>();
+
+        for (int i = 0; i < selectedProductTypes.Count; i++)
+        {
+            string proType = selectedProductTypes[i];
+            var pros = db.Products.Where(p => p.ProductType == proType);
+            if (pros != null)
+            {
+                selectedProducts.AddRange(pros);
+            }
+        }
 
 
-}
+
+    }
