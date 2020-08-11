@@ -1,16 +1,56 @@
-﻿using System;
+﻿using MyShop.Core.Contracts;
+using MyShop.Core.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace MyShop1.WebUI.Controllers
+namespace MyShop.WebUI.Controllers
 {
     public class HomeController : Controller
     {
-        public ActionResult Index()
+        IRepository<Product> context;
+        IRepository<ProductCategory> productCategories;
+
+        public HomeController(IRepository<Product> productContext, IRepository<ProductCategory> productCategoryContext)
         {
-            return View();
+            context = productContext;
+            productCategories = productCategoryContext;
+        }
+
+
+        public ActionResult Index(string category=null)
+        {
+            List<Product> products;
+            List<ProductCategory> categories = productCategories.Collection().ToList();
+            if(category==null)
+            {
+                products = context.Collection().ToList();
+            }
+            else
+            {
+                products = context.Colledtion().where(p => p.Category == Category).ToList();
+            }
+            ProductListViewModel model = new ProductListViewModel();
+            Model.Products = products;
+            Model.ProductsCategories = categories;
+
+            return View(model);
+
+        }
+
+        public ActionResult Details(string Id)
+        {
+            Product product = context.Find(Id);
+            if (product == null)
+            {
+                return HttpNotFound();
+            }
+            else
+            {
+                return View(product);
+            }
         }
 
         public ActionResult About()
