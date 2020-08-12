@@ -1,16 +1,84 @@
-﻿using System;
+﻿using MyShop.Core.Contracts;
+using MyShop.Core.Models;
+using MyShop.DataAccess.SQL;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using MyShop.Core.ViewModels;
 
-namespace MyShop1.WebUI.Controllers
+namespace MyShop.WebUI.Controllers
 {
     public class HomeController : Controller
     {
-        public ActionResult Index()
+        IRepository<Product> context;
+        IRepository<ProductCategory> productCategories;
+        public HomeController(IRepository<Product> productContext, IRepository<ProductCategory> productCategoryContext)
         {
-            return View();
+
+            context = productContext;
+            productCategories = productCategoryContext;
+
+        }
+        public ActionResult Index(string Category = null)
+        {
+
+            List<Product> products;
+            List<ProductCategory> categories = productCategories.Collection().ToList();
+            if (Category == null)
+            {
+                products = context.Collection().ToList();
+            }
+            else
+            {
+                products = context.Collection().Where(p => p.Category == Category).ToList();
+            }
+            ProductListViewModel model = new ProductListViewModel();
+            model.Products = products;
+            model.ProductCategories = categories;
+
+            return View(model);
+
+            //var products = from p in context.Collection()
+            //               select p;
+
+
+
+            //if (!String.IsNullOrEmpty(searchString))
+            //{
+            //    products = products.Where(s => s.Category.Contains(searchString));
+            //}
+
+
+            //return View(products);
+
+            ////return View(products.ToList());
+            ////List<Product> products = context.Collection().ToList();
+
+            //// return View();
+        }
+        public ActionResult FilterProduct(string category)
+        {
+
+
+
+            DataContext productContext = new DataContext();
+            List<Product> filteredProduct = productContext.Products.Where(p => p.Category == category).ToList();
+
+            return View(filteredProduct);
+        }
+        public ActionResult Details(String Id)
+        {
+            Product product = context.Find(Id);
+            if (product == null)
+            {
+                return HttpNotFound();
+            }
+            else
+            {
+                return View(product);
+            }
         }
 
         public ActionResult About()
