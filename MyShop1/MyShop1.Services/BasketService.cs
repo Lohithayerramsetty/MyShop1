@@ -4,6 +4,7 @@ using MyShop1.Core.Contracts;
 using MyShop1.Services;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -13,7 +14,7 @@ using System.Web.UI;
 
 namespace MyShop1.Services
 {
-    public class BasketService
+    public class BasketService:IBasketService
     {
         IRepository<Product> productcontext;
         IRepository<Basket> basketcontext;
@@ -131,6 +132,27 @@ namespace MyShop1.Services
           
         
     }
+     public BasketSummaryViewModel GetBasketSummaryView(HttpContextBase httpContext)
+     {
 
+         Basket basket = GetBasket(httpContext, false);
+         BasketSummaryViewModel model = new BasketSummaryViewModel(0, 0);
+         if(basket !=null)
+         {
+        int? basketCount = (from item in basket.BasketItems
+                            select item.Quantity).Sum();
+        decimal? basketTotal = (from item in basket.BasketItems
+                                join p in productcontext.Collection() on item.ProductId equals p.Id
+                                select item.Quantity * p.Price).Sum();
+
+        model.BasketCount = basketCount ?? 0;
+        model.BasketTotal = basketTotal ?? decimal.Zero;
+        return model;
+         }
+         else 
+         {
+        return model;
+         }
+     }
   }
 }

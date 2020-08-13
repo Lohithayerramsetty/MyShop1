@@ -9,6 +9,17 @@ namespace MyShop.Core.ViesModels
     public class BasketSummaryViewModel
     {
         public int BasketCount { get; set; }
-        public decimal BasketTotal
+        public decimal BasketTotal { get; set; }
+
+        public BasketSummaryViewModel()
+        {
+
+        }
+
+        public BasketSummaryViewModel(int basketcount,decimal basketTotal)
+        {
+            this.BasketCount = basketcount;
+            this.BasketTotal = basketTotal;
+        }
     }
 }
