@@ -48,6 +48,8 @@
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\Productcategory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViesModels\BasketItemViewModel.cs" />
+    <Compile Include="ViesModels\BasketSummaryViewModel.cs" />
     <Compile Include="ViesModels\ProductManagerViewModel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
